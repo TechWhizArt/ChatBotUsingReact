@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+    <script src="reactBasics.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev@8.6.4/dayjs.js"></script>
+    <script type="text/babel">
+
+        // const button = <button>Good Job!</button>;
+        // const name = 'Niharika';
+        
+        // const div = (
+        //     <div>
+        //         <p>Cotton Socks</p>
+                
+        //         <p>Price : ${socks}</p>
+        //         <button> Add to cart </button>
+        //     </div>
+        // );
+        const socks = 10;
+        const tshirt = 8;
+        const productcost = socks + 2*tshirt;
+        const shipingcost = 5;
+        const div = (
+            <div>
+                <p>Product cost: ${productcost}</p>
+                <p>Shiping cost: ${shipingcost}</p>
+                <p>Total cost: ${productcost + shipingcost}</p>
+                <button>Place your order</button>
+            </div>
+        );
+      const container = document.querySelector('.js-container');
+    //   ReactDOM.createRoot(container).render(div);
+      // to print day
+    //   ReactDOM.createRoot(container).render(dayjs().format('MMMM D'));
+      ReactDOM.createRoot(container).render(dayjs().format('HH:mm:ss'));
+
+      dayjs().format('MMMM D')
+      // we cannot give render multiple elements.
+      //we also cannot save multiple elements inside a vatiable, we can crate an div and contain multiple elements inside that div
+      // render = display something
+
+
+
+
+    </script>
+  </body>
+</html>
