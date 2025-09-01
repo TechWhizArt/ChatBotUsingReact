@@ -33,3 +33,8 @@ let names = ["Pedro", "Jack", "Jessica", "Pedro"];
 names.filter((name)=> {
     return name !== "Pedro"
 })
+
+
+
+
+// chatbot js

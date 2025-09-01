@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat Bot</title>
+    <style>
+      /* wrapper for whole chat app */
+      .chat-wrapper {
+        width: 400px;
+        height: 500px; /* total height */
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* scrollable area */
+      .chat-container {
+        flex: 1; /* take up remaining space */
+        padding: 10px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-message {
+        display: flex;
+        align-items: center;
+        margin: 8px 0;
+      }
+
+      .chat-message img {
+        margin: 0 8px;
+        border-radius: 50%;
+      }
+
+      /* input always fixed at bottom */
+      .chat-input-container {
+        border-top: 1px solid #ccc;
+        padding: 8px;
+        display: flex;
+        gap: 5px;
+      }
+
+      .chat-input-container input {
+        flex: 1;
+        padding: 6px;
+      }
+
+      .chat-input-container button {
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+    <script type="text/babel">
+      function ChatInput({ chatMessages, setChatMessages }) {
+        const [inputText, setInputText] = React.useState("");
+
+        function sendMessage() {
+          if (!inputText.trim()) return;
+
+          const newChatMessage = [
+            ...chatMessages,
+            { message: inputText, sender: "user", id: crypto.randomUUID() },
+          ];
+
+          setChatMessages(newChatMessage);
+
+          const response = Chatbot.getResponse(inputText);
+          setChatMessages([
+            ...newChatMessage,
+            { message: response, sender: "robot", id: crypto.randomUUID() },
+          ]);
+
+          setInputText("");
+        }
+
+        return (
+          <div className="chat-input-container">
+            <input
+              placeholder="Send a message to Chatbot"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            />
+            <button onClick={sendMessage}>Send</button>
+          </div>
+        );
+      }
+
+      function ChatMessage({ message, sender }) {
+        return (
+          <div className="chat-message">
+            {sender === "robot" && <img src="robot.png" width="40" />}
+            <span>{message}</span>
+            {sender === "user" && <img src="user.png" width="40" />}
+          </div>
+        );
+      }
+
+      function ChatMessages({ chatMessages }) {
+        const chatRef = React.useRef(null);
+
+        React.useEffect(() => {
+          if (chatRef.current) {
+            chatRef.current.scrollTop = chatRef.current.scrollHeight;
+          }
+        }, [chatMessages]);
+
+        return (
+          <div className="chat-container" ref={chatRef}>
+            {chatMessages.map((chat) => (
+              <ChatMessage
+                key={chat.id}
+                message={chat.message}
+                sender={chat.sender}
+              />
+            ))}
+          </div>
+        );
+      }
+
+      function App() {
+        const [chatMessages, setChatMessages] = React.useState([
+          { message: "Hello Chatbot", sender: "user", id: "id1" },
+          { message: "Hello User!", sender: "robot", id: "id2" },
+        ]);
+
+        return (
+          <div className="chat-wrapper">
+            <ChatMessages chatMessages={chatMessages} />
+            <ChatInput
+              chatMessages={chatMessages}
+              setChatMessages={setChatMessages}
+            />
+          </div>
+        );
+      }
+
+      const container = document.querySelector(".js-container");
+      ReactDOM.createRoot(container).render(<App />);
+    </script>
+  </body>
+</html>
